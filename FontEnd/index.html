@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API 測試</title>
+</head>
+<body>
+  <h1>API 測試</h1>
+  <pre id="apiResponse">載入中...</pre>
+  <h1>用戶列表</h1>
+  <ul id="userList"></ul>
+
+  <script type="module">
+  import { apiRequest } from './js/fetch.js';
+  // 當文檔加載完成時執行
+  function addUserToList(users) {
+    const userList = document.getElementById('userList');
+    let htmlTemplate = ''
+    users.forEach(ele => {
+      htmlTemplate += `<li>ID: ${ele.id}, 名字: ${ele.name}, 郵箱: ${ele.email}, 角色: ${ele.role}</li>`;
+    });
+    userList.innerHTML = htmlTemplate
+  }
+  document.addEventListener('DOMContentLoaded', async function () {
+    const apiResponse = document.querySelector('#apiResponse')
+      // 指定 API 的 URL
+      const route = 'users';
+      const method = 'GET';
+      const data = await apiRequest(route, method)
+      apiResponse.innerHTML = `載入完成`
+      addUserToList(data)
+  });
+  </script>
+</body>
+</html>
