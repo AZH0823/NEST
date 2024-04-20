@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, Query, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 // ParseIntPipe 數字驗證 https://docs.nestjs.com/pipes
 import { UsersService } from './users.service'
 // https://[domain]/user /user 路由控制器
@@ -31,14 +31,14 @@ export class UsersController {
 
   // 创建一个新用户
   @Post() // post /users/
-  create(@Body() creatUserDto: CreateUserDto) {
+  create(@Body(ValidationPipe) creatUserDto: CreateUserDto) {
     // 你的逻辑代码，例如：保存用户数据，并返回创建的用户
     return this.userService.create(creatUserDto)
   }
 
   // 根据ID更新用户的信息
   @Patch(':id') // patch users/:id
-  update(@Param('id', ParseIntPipe) id: number, @Body() userUpdate: UpdateUserDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) userUpdate: UpdateUserDto) {
     // 你的逻辑代码，例如：更新用户数据，并返回更新后的用户信息
     return this.userService.update(id, userUpdate)
   }

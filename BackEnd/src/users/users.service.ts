@@ -3,6 +3,9 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+
+// 異常處理
+import { NotFoundException } from '@nestjs/common';
 @Injectable()
 export class UsersService {
   private users = [
@@ -41,12 +44,16 @@ export class UsersService {
   findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN'){
     console.log(`findAll: `, this)
     if (role) {
-      return this.users.filter(user=>user.role === role)
+       const rolersArray = this.users.filter(user=>user.role === role)
+       if(rolersArray.length === 0) throw new NotFoundException('找不到使用者資料')
+       return rolersArray
     }
     return this.users
   }
   findOne(id: number) {
-    return this.users.find(user=> user.id === id)
+    const user = this.users.find(user=> user.id === id)
+    if(!user) throw new NotFoundException('找不到使用者資料')
+    return user
   }
   create(createUserDto: CreateUserDto){
     const userHighID = [...this.users].sort((a, b)=>b.id - a.id)
