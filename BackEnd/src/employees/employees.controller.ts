@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Ip, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Ip, HttpException, HttpStatus, UseInterceptors } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { Prisma, Role } from '@prisma/client'
 import { Throttle, SkipThrottle } from '@nestjs/throttler' 
 import { MyLoggerService } from 'src/my-logger/my-logger.service';
 import { NotFoundException } from '@nestjs/common';
-
+import { LoggingInterceptor } from './employessInter.interceptor' // 攔截器匯入
 
 @Controller('employees')
 export class EmployeesController {
@@ -16,6 +16,7 @@ export class EmployeesController {
   }
 
   @SkipThrottle({ default: false })
+  @UseInterceptors(LoggingInterceptor)
   @Get()
   async findAll(@Ip() ip: string, @Query('role') role?: Role) {
     this.logger.log(`Request for ALL Employees\t${ip}`, `$-test{EmployeesController.name}-test`)

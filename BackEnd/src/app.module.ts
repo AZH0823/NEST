@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { EmployeesModule } from './employees/employees.module'; 
 import { APP_GUARD } from '@nestjs/core'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'; // https://nest.nodejs.cn/security/rate-limiting#multiple-throttler-definitions
+
 @Module({
   imports: [UsersModule, DatabaseModule, EmployeesModule,
   ThrottlerModule.forRoot([{
@@ -20,7 +21,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'; // https://
     }]),],
   controllers: [AppController],
   providers: [AppService, {
-    provide: APP_GUARD, 
+    provide: APP_GUARD , 
     useClass: ThrottlerGuard,
   }],
 })
